@@ -1,12 +1,15 @@
+import uvicorn
+from fastapi import FastAPI
 import cv2
 from glob import glob
 from pathlib import Path
 
 from model import Model
 from utils import plot
+app = FastAPI()
 
+@app.post('/predict')
 def process_video(input_video_path: str, output_path: str):
-    # 
     cap = cv2.VideoCapture(video_path)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
@@ -26,27 +29,28 @@ def process_video(input_video_path: str, output_path: str):
         prediction = model.predict(frame)
         label = prediction['label']
         conf = prediction['confidence']
-        print(f"label: {label} confidence: {conf}")
-
+        
+        return{
+            "label": label,
+             "confidence": conf
+        }
         # cv2.imshow('Recording...', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-        out.write(frame)
-        success, frame = cap.read()
-
     cap.release()
     out.release()
     cv2.destroyAllWindows()
 
+if __name__ == '__main__':
+    model = Model()
 
-model = Model()
+    image_pathes = glob('./data/*.jpg')
+    image_pathes += glob('./data/*.png')
+    image_pathes[:2]
+    save_folder_path = Path('results')
 
-image_pathes = glob('./data/*.jpg')
-image_pathes += glob('./data/*.png')
-image_pathes[:2]
-save_folder_path = Path('results')
+    video_path = './data/fire.mp4'
+    save_video_path = str(save_folder_path / 'result_fire.avi')
 
-video_path = './data/fire.mp4'
-save_video_path = str(save_folder_path / 'result_fire.avi')
-
-process_video(video_path, save_video_path)
+    process_video(video_path, save_video_path)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
