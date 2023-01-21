@@ -25,13 +25,9 @@ def process_video(input_video_path: str, output_path: str):
         prediction = model.predict(frame)
         label = prediction['label']
         conf = prediction['confidence']
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        frame = cv2.putText(frame, label.title(), 
-                            (0, 100), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, 
-                            (0, 0, 255), 2)
+        print(f"label: {label} confidence: {conf}")
 
-        cv2.imshow('Recording...', frame)
+        # cv2.imshow('Recording...', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         out.write(frame)
