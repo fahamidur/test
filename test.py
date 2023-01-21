@@ -21,7 +21,7 @@ def process_video(input_video_path: str, output_path: str):
 
     while success and cap.isOpened():
 
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         prediction = model.predict(frame)
         label = prediction['label']
         conf = prediction['confidence']
