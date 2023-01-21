@@ -6,7 +6,8 @@ from model import Model
 from utils import plot
 
 def process_video(input_video_path: str, output_path: str):
-    cap = cv2.VideoCapture(video_path)
+    # video_path
+    cap = cv2.VideoCapture(0)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) + 0.5)
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) + 0.5)
     size = (width, height)
